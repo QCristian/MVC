@@ -1,0 +1,194 @@
+/* ========================
+   VARIABLES
+======================== */
+:root {
+    --color-bg-body: #f4f4f4;
+    --color-text-body: #333;
+
+    --color-navbar-bg: #0b9152;
+    --color-navbar-hover-bg: #fff;
+    --color-navbar-hover-text: #0b9152;
+
+    --color-sidebar-bg: #1faf6c;
+    --color-sidebar-hover-bg: #fff;
+    --color-sidebar-hover-text: #0b9152;
+
+    --padding-navbar-link: 10px 14px;
+    --gap-navbar: 15px;
+
+    --sidebar-bg: #119c5b;
+    --sidebar-text: #fff;
+    --sidebar-width: 240px;
+
+    --navbar-height: 55px;
+
+    --font-family: Arial, sans-serif;
+    --border-radius: 12px;
+    --shadow-main: 0 3px 10px rgba(0,0,0,.08);
+}
+
+/* ========================
+   GENERAL
+======================== */
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--color-bg-body);
+    color: var(--color-text-body);
+}
+body.draft-view main:not(#dashboard-main) {
+    display: none;
+}
+
+/* ========================
+   NAVBAR FIJA
+======================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: var(--navbar-height);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-navbar);
+    background: var(--color-navbar-bg);
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.navbar a {
+    text-decoration: none;
+    padding: var(--padding-navbar-link);
+    border-radius: var(--border-radius);
+    color: white;
+    transition: 0.2s;
+}
+
+.navbar a:hover {
+    background: var(--color-navbar-hover-bg);
+    color: var(--color-navbar-hover-text);
+}
+
+/* ========================
+   LAYOUT GENERAL (SIDEBAR + CONTENIDO)
+======================== */
+.layout {
+    display: flex;
+    margin-top: var(--navbar-height); /* para evitar tapar el contenido */
+}
+
+/* ========================
+   MAIN GENERAL
+======================== */
+main {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-main);
+    margin-top: 20px;
+    width: auto; /* ocupa todo menos margen */
+}
+
+/* ========================
+   MAIN DEL DASHBOARD / VISTA CON SIDEBAR
+======================== */
+main#dashboard-main {
+    position: fixed;
+    left: 270px;
+    top: 0px;
+    width: calc(100% - 240px);
+    height: calc(100vh - var(--navbar-height));
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-main);
+    overflow-y: auto;
+    z-index: 10;
+}
+
+/* ========================
+   SIDEBAR SOLO PARA DRAFT VISTA
+======================== */
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    width: 240px;
+    height: calc(100vh - var(--navbar-height));
+    background: var(--color-sidebar-bg);
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar section {
+    margin-bottom: 25px;
+}
+
+.sidebar h3, .sidebar h4 {
+    margin: 0;
+    padding: 3px 0;
+}
+
+.sidebar p {
+    color: #f0f0f0;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ========================
+   MAIN CON SIDEBAR
+======================== */
+main.con-sidebar {
+    margin-left: 80%; /* espacio del sidebar */
+}
+
+/* ========================
+   DASHBOARD LAYOUT ADICIONAL PARA BODY.DRAFT-VIEW
+======================== */
+body.draft-view .dashboard-layout {
+    display: flex;
+    margin-top: var(--navbar-height);
+    height: calc(100vh - var(--navbar-height));
+    overflow: hidden; /* evita scroll doble */
+}
+
+/* ========================
+   SIDEBAR FIJO PARA DASHBOARD LAYOUT
+======================== */
+body.draft-view .sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    overflow-y: auto;
+}
+body.draft-view .sidebar a {
+    color: #fff;
+    text-decoration: none;
+}
+body.draft-view .sidebar a:hover {
+    text-decoration: underline;
+}
+
+/* ========================
+   MAIN FIJO PARA DASHBOARD LAYOUT
+======================== */
+body.draft-view #dashboard-main {
+    flex: 1; /* ocupa todo el espacio restante */
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-main);
+    overflow-y: auto;
+}
