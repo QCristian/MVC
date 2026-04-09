@@ -1,4 +1,8 @@
 <?php
+session_start();
+?>
+
+<?php
 // Obtener la página solicitada o 'inicio' por defecto
 $page = $_GET['page'] ?? 'inicio';
 $page = trim($page, '/'); // Limpia barras al inicio/fin
@@ -16,6 +20,15 @@ switch($page){
         break;
     case 'draft':
         require '../controllers/DraftController.php';
+        break;
+    case 'login':
+        require '../controllers/LoginController.php';
+        break;
+    case 'logout':
+        require '../controllers/LogoutController.php';
+        break;
+    case 'register':
+        require '../controllers/RegisterController.php';
         break;
     default:
         require '../controllers/HomeController.php';

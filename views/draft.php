@@ -1,3 +1,9 @@
+<?php
+if(!isset($_SESSION['user'])){
+    header('Location: /mvc/public/index.php?page=inicio');
+    exit;
+}
+?>
 <div class="dashboard-layout">
 
     <!-- Sidebar -->
@@ -86,15 +92,15 @@ https://github.com/QCristian/MVC
         <h3>Segunda sección</h3>
         <h4>CSS</h4>
         <p>La forma más correcta y eficaz en MVC con .htaccess es: <br>
-        ✅ 1. Guardar los estilos en /public/css/
+        ✅ 1. Guardar los estilos en //mvc/public/css/
             <pre>
-                public/css/estilos.css
+                /mvc/public/css/estilos.css
             </pre>
         </p>
         <p>
         ✅ 2. En las vistas, cargar el CSS con ruta absoluta desde public:
             <pre>
-                link rel="stylesheet" href="/css/estilos.css"
+                link rel="stylesheet" href="/mvc/public/css/estilos.css"
             </pre>
         </p>
         <p>
@@ -135,4 +141,4 @@ https://github.com/QCristian/MVC
 
 
 
-<?php $extraJs = "/js/script.js"; ?>
+<?php $extraJs = "/mvc/public/js/script.js"; ?>

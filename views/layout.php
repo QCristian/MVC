@@ -1,18 +1,31 @@
+<a data-target="sec1">Sección 1</a>
+<a data-target="sec2">Sección 2</a>
+
+<?php if(isset($_SESSION['user'])): ?>
+    <a data-target="sec3">Sección 3</a>
+    <a data-target="sec4">Sección 4</a>
+<?php endif; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <title><?= $titulo ?></title>
-<link rel="stylesheet" href="/css/estilos.css">
+<link rel="stylesheet" href="/mvc/public/css/estilos.css">
 </head>
 <body class="<?= $bodyClass ?? '' ?>">
 
 <header class="navbar">
-    <a href="/inicio">Inicio</a>
-    <a href="/sobre">Sobre</a>
-    <a href="/servicios">Servicios</a>
-    <a href="/contacto">Contacto</a>
-    <a href="/draft">Drafts</a>
+    <a href="/mvc/public/index.php?page=inicio">Inicio</a>
+    <a href="/mvc/public/index.php?page=sobre">Sobre</a>
+    <a href="/mvc/public/index.php?page=servicios">Servicios</a>
+    <a href="/mvc/public/index.php?page=contacto">Contacto</a>
+    <a href="/mvc/public/index.php?page=draft">Drafts</a>
+
+    <?php if(!isset($_SESSION['user'])): ?>
+        <a href="/mvc/public/index.php?page=login">Iniciar sesión</a>
+    <?php else: ?>
+        <a href="/mvc/public/index.php?page=logout">Cerrar sesión</a>
+    <?php endif; ?>
 </header>
 
 <main>
