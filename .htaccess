@@ -1,0 +1,10 @@
+# Disable directory listing
+Options -Indexes
+
+# If mod_rewrite is available, internally rewrite requests to the public folder
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Avoid rewriting requests that already target /public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
