@@ -1,10 +1,8 @@
-<a data-target="sec1">Sección 1</a>
-<a data-target="sec2">Sección 2</a>
-
-<?php if(isset($_SESSION['user'])): ?>
-    <a data-target="sec3">Sección 3</a>
-    <a data-target="sec4">Sección 4</a>
-<?php endif; ?>
+<?php if (session_status() === PHP_SESSION_NONE) session_start();
+    $dark = isset($_SESSION['darkMode']) && $_SESSION['darkMode'];
+    $currentRole = strtolower($_SESSION['role'] ?? 'user');
+    $roleClass = 'role-' . $currentRole;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,56 +10,73 @@
 <title><?= $titulo ?></title>
 <link rel="stylesheet" href="/mvc/public/css/estilos.css">
 </head>
-<body class="<?= $bodyClass ?? '' ?>">
-
+<body class="<?= trim(($bodyClass ?? '') . ' ' . $roleClass . ($dark ? ' dark-mode' : '')) ?>">
 <header class="navbar">
     <a href="/mvc/public/index.php?page=inicio">Inicio</a>
-    <a href="/mvc/public/index.php?page=sobre">Sobre</a>
-    <a href="/mvc/public/index.php?page=servicios">Servicios</a>
     <a href="/mvc/public/index.php?page=contacto">Contacto</a>
-    <a href="/mvc/public/index.php?page=draft">Drafts</a>
 
-    <?php if(!isset($_SESSION['user'])): ?>
-        <a href="/mvc/public/index.php?page=login">Iniciar sesión</a>
-    <?php else: ?>
-        <a href="/mvc/public/index.php?page=logout">Cerrar sesión</a>
-    <?php endif; ?>
+    <div class="right">
+        <?php if(!isset($_SESSION['user'])): ?>
+            <a href="/mvc/public/index.php?page=login">Iniciar sesión</a>
+        <?php else: ?>
+            <a href="/mvc/public/index.php?page=draft">Drafts</a>
+            <a href="/mvc/public/index.php?page=logout">Cerrar sesión</a>
+        <?php endif; ?>
+
+        <button id="theme-toggle" class="btn theme-toggle"><?= $dark ? 'Modo Claro' : 'Modo Oscuro' ?></button>
+    </div>
 </header>
 
-<main>
-    <?= $contenido ?>
-</main>
-
-<!-- Botón para cambiar tema -->
-<button id="theme-toggle" style="
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    background: #0b9152;
-    color: #fff;
-    cursor: pointer;
-    z-index: 2000;
-">Modo Oscuro</button>
-
+<?php if(strpos($bodyClass ?? '', 'draft-view') !== false): ?>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">Mi App</div>
+            <nav>
+                <?php if (!empty($sections)): ?>
+                    <?php foreach ($sections as $section): ?>
+                        <a href="#section-<?= (int)$section['id'] ?>"><?= htmlspecialchars($section['title']) ?></a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'superadmin'], true)): ?>
+                    <a href="#users-section">Usuarios</a>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'superadmin'], true)): ?>
+                    <a href="#panel-header-editor">Texto del panel</a>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'superadmin'], true)): ?>
+                    <a href="#section-create">Nueva sección</a>
+                <?php endif; ?>
+                <?php /* Solicitudes removed per new requirements */ ?>
+            </nav>
+            <div class="sidebar-footer">Usuario: <?= htmlspecialchars($_SESSION['user'] ?? '') ?></div>
+        </aside>
+        <main id="dashboard-main">
+            <?= $contenido ?>
+        </main>
+    </div>
+<?php else: ?>
+    <main>
+        <?= $contenido ?>
+    </main>
+<?php endif; ?>
 <script>
     const body = document.body;
     const toggleBtn = document.getElementById('theme-toggle');
 
-    // Cargar preferencia guardada
-    if(localStorage.getItem('darkMode') === 'true') {
-        body.classList.add('dark-mode');
-        toggleBtn.textContent = 'Modo Claro';
-    }
+    if (toggleBtn) {
+        const setButtonText = (isDark) => toggleBtn.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+        setButtonText(body.classList.contains('dark-mode'));
 
-    toggleBtn.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDark);
-        toggleBtn.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
-    });
+        toggleBtn.addEventListener('click', () => {
+            const isDark = body.classList.toggle('dark-mode');
+            setButtonText(isDark);
+            fetch('/mvc/public/index.php?page=toggle_theme', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({mode: isDark ? 'dark' : 'light'})
+            }).catch(e => console.warn('No se pudo guardar preferencia', e));
+        });
+    }
 </script>
 
 <?php if(!empty($extraJs)): ?>

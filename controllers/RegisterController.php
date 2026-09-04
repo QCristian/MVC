@@ -14,9 +14,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         if($userModel->findByUsername($username)) {
             $error = "Usuario ya existe";
         } else {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-            $stmt->execute([$username, $hash]);
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO users (username, password, role, force_password_change) VALUES (?, ?, 'user', 0)");
+                $stmt->execute([$username, $hash]);
             $success = "Usuario registrado, ahora puedes iniciar sesión";
         }
     }
